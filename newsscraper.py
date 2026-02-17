@@ -11,18 +11,26 @@ def getdata(url):
     return BeautifulSoup(response.text, "html.parser")
 
 def fetch_articles(links, select_title, select_content, limit):
+    data = load()
+    existing_titles = {d["title"] for d in data} 
     articles = []
-    for link in list(dict.fromkeys(links))[:limit]:
+
+    for link in list(dict.fromkeys(links)):
+        if len(articles) >= limit:
+            break     
         soup = getdata(link)    
+        if not soup: continue 
+        
         title_tag = soup.select(select_title)
         content_tag = soup.select(select_content)
         
-        title = "".join(t.get_text(strip=True) for t in title_tag)   
-        content = " ".join(t.get_text(strip=True) for t in content_tag)   
-        if content:
+        title = "".join(t.get_text(strip=True) for t in title_tag)    
+        content = " ".join(t.get_text(strip=True) for t in content_tag)    
+        
+        if content and title not in existing_titles:
             articles.append({"title": title, "content": content})
+            existing_titles.add(title)
     
-    data = load()
     data.extend(articles)
     store(data)
 
