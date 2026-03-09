@@ -1,0 +1,5 @@
+*.jsonl
+counter.txt
+__pycache__/
+chroma/
+.venv

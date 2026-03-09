@@ -1,0 +1,5 @@
+ollama
+chromadb
+langchain_text_splitters
+requests
+beautifulsoup4
